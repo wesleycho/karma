@@ -46,9 +46,9 @@ module.exports = function (grunt) {
     },
     cucumberjs: {
       options: {
-        steps: 'test/e2e/steps',
+        steps: 'test/e2e/step_definitions',
         format: 'progress',
-        require: 'test/e2e/support/env.js'
+        require: ['test/e2e/support/env.js', 'test/e2e/support/world.js']
       },
       all: 'test/e2e/*.feature',
       current: {
@@ -64,7 +64,7 @@ module.exports = function (grunt) {
           src: 'test/e2e/*.feature'
         },
         options: {
-          tags: '~@not-jenkins'
+          tags: 'not @not-jenkins'
         }
       }
     },
@@ -135,8 +135,9 @@ module.exports = function (grunt) {
   grunt.loadTasks('tasks')
   require('load-grunt-tasks')(grunt)
 
+  grunt.registerTask('lint', ['eslint'])
   grunt.registerTask('build', ['browserify:client'])
-  grunt.registerTask('default', ['build', 'test', 'lint'])
+  grunt.registerTask('default', ['build', 'lint', 'test'])
   grunt.registerTask('test-appveyor', ['test:unit', 'test:client'])
 
   grunt.registerTask('release', 'Build, bump and publish to NPM.', function (type) {
